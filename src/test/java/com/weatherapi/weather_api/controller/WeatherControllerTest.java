@@ -8,18 +8,32 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.mockito.BDDMockito.given;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+import com.weatherapi.weather_api.service.WeatherService;
+
+
 
 @WebMvcTest(WeatherController.class)
 class WeatherControllerTest {
+
+    @MockBean
+    private WeatherService weatherService;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void shouldReturnLocation_whenValidInput() throws Exception {
+    void shouldReturnLocationWhenValidInput() throws Exception {
 
         // given
         String location = "London";
+        String expected = "The weather is good in London";
+
+        given(weatherService.getWeather(location))
+                .willReturn(expected);
+
 
         // when
         var request = get("/weather")
@@ -28,7 +42,25 @@ class WeatherControllerTest {
         // then
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(content().string(location));
+                .andExpect(content().string(expected));
+    }
+
+    @Test
+
+    void shouldReturnBadRequestWhenLocationIsMissing() throws Exception{
+
+        // given
+        String location = "";
+
+        // when
+        var request = get("/weather")
+                .param("location", location);
+
+        // then
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+
+
     }
 
 }
