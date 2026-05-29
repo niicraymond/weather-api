@@ -22,8 +22,49 @@ public class WeatherService {
 
         double temp = weather.getCurrent().getTemperature_2m();
         double wind = weather.getCurrent().getWind_speed_10m();
+        int code = weather.getCurrent().getWeather_code();
 
-        return "Lat: " + lat + ", Lon: " + lon + ", Temp: " + temp + ", Wind: " + wind;
+        String description;
+
+
+        if (code == 0) {
+            description = "Clear sky";
+        } else if (code == 1) {
+            description = "Mainly clear";
+        } else if (code == 2) {
+            description = "Partly cloudy";
+        } else if (code == 3) {
+            description = "Overcast";
+        } else if (code == 45) {
+            description = "Fog";
+        } else if (code == 48) {
+            description = "Rime fog";
+        } else if (code == 51) {
+            description = "Light drizzle";
+        } else if (code == 53) {
+            description = "Moderate drizzle";
+        } else if (code == 55) {
+            description = "Heavy drizzle";
+        } else if (code == 61) {
+            description = "Light rain";
+        } else if (code == 63) {
+            description = "Moderate rain";
+        } else if (code == 65) {
+            description = "Heavy rain";
+        } else if (code == 71) {
+            description = "Light snow";
+        } else if (code == 73) {
+            description = "Moderate snow";
+        } else if (code == 75) {
+            description = "Heavy snow";
+        } else {
+            description = "Unknown";
+        }
+
+
+
+        return "Weather in " + location + ": " + description + ", Temp: " + temp + ", Wind: " + wind;
+
 
     }
 }
